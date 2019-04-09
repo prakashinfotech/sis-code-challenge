@@ -8,8 +8,8 @@ of using a database. You are required to make a web application which will impor
 employee monthly expense submissions going-forward.
 
 What your web-based application must do:
-    - Your app must accept (via a form) a pipe-separated file with the following columns: date, category, employee name, employee address, expense description, pre-tax amount, 
-        tax name, and tax amount.
+    - Your app must accept (via a form) a pipe-separated file with the following columns: date, category, employee name, employee address, expense description, 
+        pre-tax amount and tax amount.
         
     - You can make the following assumptions:
         i. Columns will always be in that order.
