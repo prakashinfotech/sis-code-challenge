@@ -4,8 +4,8 @@
 Project Description
 -------------------
 Suppose SpaceiShare has acquired a new company. That company , unfortuately, chose to track their employees' monthly expense using a pipe-separated (PSV) file instead
-of using a database. You are required to make a web application which will import a user selected PSV file into a relational DB (admin) and then continue to track 
-employee monthly expense submissions going-forward.
+of using a database. You are required to make a web application which will import a user selected PSV file into a relational DB (as an administrator user) and then continue to track 
+employee monthly expenses through submission web-forms going-forward.
 
 What your web-based application must do:
     - Your app must accept (via a form) a pipe-separated file with the following columns: date, category, employee name, employee address, expense description, 
@@ -16,7 +16,7 @@ What your web-based application must do:
         ii. There will always be data in each column.
         iii. There will always be a header line.
     
-    - Users must be able to login (or register and then login) and continue their monthly expense reporting using the web application
+    - Users must be able to login (or register and then login) and continue their monthly expense reporting using the web application (not through file upload)
     - User must be able to review past imported expense submissions as well as any new entries (think of how your expense entry system might work and how to make it 
         easy for the employee to report their expenses).
     - You web application should work well on Desktop, Tablet or Mobile devices (responsive web design).
