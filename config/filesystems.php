@@ -65,5 +65,5 @@ return [
         ],
 
     ],
-
+	'max_allowed_upload_size'=>ini_get('upload_max_filesize')
 ];

@@ -33,7 +33,12 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+							<li class="">
+				            	<a class="nav-link" href="{{ route('home') }}">Dashboard</a>
+				            </li>
+				            <li class="">
+				            	<a class="nav-link" href="{{ route('employees_expense.create') }}">Import Expense</a>
+				            </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
