@@ -21,6 +21,14 @@ class Category extends Model
 	 */	
 	public function employeeExpense()
 	{
-		return $this->hasMany('App\EmployeeExpense','category_id','id');
+		return $this->belongsTo(EmployeeExpense::class,'category_id','id');
+	}
+	
+	static function loadCategory($category){
+		$cat = Category::where('title', $category)->first();
+		if(empty($cat)){
+			$cat= Category::create(['title' => $category]);
+		}
+		return $cat->id;
 	}
 }

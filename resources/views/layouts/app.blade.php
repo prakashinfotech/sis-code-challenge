@@ -18,6 +18,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @stack('styles')
 </head>
 <body>
     <div id="app">
@@ -37,7 +38,7 @@
 				            	<a class="nav-link" href="{{ route('home') }}">Dashboard</a>
 				            </li>
 				            <li class="">
-				            	<a class="nav-link" href="{{ route('employees_expense.create') }}">Import Expense</a>
+				            	<a class="nav-link" href="{{ route('employees_expense.index') }}">Import Expense</a>
 				            </li>
                     </ul>
 
@@ -81,5 +82,6 @@
             @yield('content')
         </main>
     </div>
+    @stack('scripts')
 </body>
 </html>

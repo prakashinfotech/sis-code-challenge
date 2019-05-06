@@ -8,11 +8,11 @@
                 <div class="card-header">Import Expense</div>
                 <div class="card-body">
 	                <div class="flash-message pt-10">
-	                    @if (session('status'))
-	                        <div class="alert alert-success" role="alert">
-	                            {{ session('status') }}
-	                        </div>
-	                    @endif
+	                    @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+					          @if(Session::has('alert-' . $msg))
+					          <p class="alert alert-{{ $msg }}">{{ Session::get('alert-' . $msg) }} <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a></p>
+					          @endif
+					    @endforeach
 	                  </div>
 					{!! Form::open(array('route' =>'employees_expense.store','enctype'=>'multipart/form-data','method'=>'POST','files'=>'true')) !!}
 						<div class="col-md-12">

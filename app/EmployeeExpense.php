@@ -21,6 +21,15 @@ class EmployeeExpense extends Model
 	];
 	
 	/**
+	 * The attributes that should be mutated to dates.
+	 *
+	 * @var array
+	 */
+	protected $dates = [
+			'expense_date',
+	];
+	
+	/**
 	 * Get the category that owns the employeeExpense.
 	 */
 	public function category()
