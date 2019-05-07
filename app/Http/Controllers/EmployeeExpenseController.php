@@ -15,39 +15,76 @@ class EmployeeExpenseController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+	public function index(Request $request)
     {
     	$userId = Auth::user()->id;
     	if (request()->ajax()) {
-    		$data = array();
-    		//$expense = EmployeeExpense::where('user_id',$userId)->orderBy('id', 'asc')->get();
-    		
+    
     		$expense = new EmployeeExpense();
-    		$per_page = 10;
-    		if(isset($request->per_page) && $request->per_page != ''){
-    			$per_page = $request->per_page;
+    		$totalData = $expense->count();
+    		$totalFiltered = $totalData;
+    		
+    		$limit = $request->length; //$_GET['length'];
+    		$start =  $request->start; //$_GET['start'];
+    		$order=	$request->columns[$request->order[0]['column']]['name']; //$_GET['columns'][$_GET['order'][0]['column']]['name'];
+    		$dir =$request->order[0]['dir']; //$_GET['order'][0]['dir'];
+    		$search =$request->search['value']; //$_GET['search']['value'];
+    		
+    		if(!empty($search))
+    		{
+    			$expense= $expense->whereHas('category',function ($query) use ($search){
+    				$query->where(function ($q) use ($search) {
+    					$q->where('title', 'LIKE', '%'.$search.'%');
+    				});
+    			})->orWhere('expense_description', 'LIKE', '%'.$search.'%')
+    			->orWhere('pre_tax_amount', 'LIKE', '%'.$search.'%')
+    			->orWhere('tax_amount', 'LIKE', '%'.$search.'%');
     		}
-    		$expenseList = $expense->paginate($per_page);
-    		if(!empty($expenseList)){
-    			foreach ($expenseList AS $expenseDetails){
+    		if(isset($order) && $order!= ''){
+    				$orderField = $order;
+    				$sortBy= $dir;
+    				
+    				if($orderField =='category'){
+    					$expense= $expense->whereHas('category',function ($query) use ($dir){
+    						$query->where(function ($q) use ($dir){ 
+    							$q->orderBy('title',$dir);
+    						});
+    					});
+    					
+    				}else {
+    					$expense= $expense->orderBy($orderField, $sortBy);
+    				}
+    		}
+    		$expense = $expense->offset($start)->limit($limit)->get();
+    		$data = array();
+    		if(!empty($expense))
+    		{
+    			foreach ($expense as $expenseDetails)
+    			{
     				$expenseData=array();
-    				$expenseData[0] =$expenseDetails->id;
+    				$expenseData[0] = $expenseDetails->id;
     				$expenseData[1] = date('m/d/Y', strtotime($expenseDetails->expense_date));
-    				$expenseData[2] = $expenseDetails->category->title;
+    				$expenseData[2] =  $expenseDetails->category->title;
     				$expenseData[3] = $expenseDetails->expense_description;
     				$expenseData[4] = $expenseDetails->pre_tax_amount;
     				$expenseData[5] = $expenseDetails->tax_amount;
+    				$data[] = $expenseData;
     				
-    				$data['data'][] = $expenseData;
     			}
+    			
     		}
     		
-    		$data['iTotalRecords'] = $expenseList->total();
-    		$data['iTotalDisplayRecords'] = 10;
-    		
-    		return response()->json($data);
+    		$json_data = array(
+    				"draw"            => intval($_GET['draw']),
+    				"recordsTotal"    => intval($totalData),
+    				"recordsFiltered" => intval($totalFiltered),
+    				"data"            => $data,
+    				"expense"            => $expense
+    		);
+    	  return response()->json($json_data);
     	}
     	return view('employees_expense.index',compact('expense'));
     }

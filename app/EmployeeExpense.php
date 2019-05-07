@@ -30,11 +30,22 @@ class EmployeeExpense extends Model
 	];
 	
 	/**
+	 * Override parent boot and Call deleting
+	 *
+	 * @return void
+	 */
+	protected static function boot()
+	{
+		parent::boot();
+	}
+	
+	/**
 	 * Get the category that owns the employeeExpense.
 	 */
 	public function category()
 	{
 		return $this->belongsTo(Category::class,'category_id','id');
+		
 	}
 	
 	/**
