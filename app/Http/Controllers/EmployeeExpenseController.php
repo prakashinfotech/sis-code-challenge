@@ -27,11 +27,11 @@ class EmployeeExpenseController extends Controller
     		$totalData = $expense->count();
     		$totalFiltered = $totalData;
     		
-    		$limit = $request->length; //$_GET['length'];
-    		$start =  $request->start; //$_GET['start'];
-    		$order=	$request->columns[$request->order[0]['column']]['name']; //$_GET['columns'][$_GET['order'][0]['column']]['name'];
-    		$dir =$request->order[0]['dir']; //$_GET['order'][0]['dir'];
-    		$search =$request->search['value']; //$_GET['search']['value'];
+    		$limit = $request->length; 
+    		$start =  $request->start; 
+    		$order=	$request->columns[$request->order[0]['column']]['name'];
+    		$dir =$request->order[0]['dir'];
+    		$search =$request->search['value'];
     		
     		if(!empty($search))
     		{
@@ -44,19 +44,7 @@ class EmployeeExpenseController extends Controller
     			->orWhere('tax_amount', 'LIKE', '%'.$search.'%');
     		}
     		if(isset($order) && $order!= ''){
-    				$orderField = $order;
-    				$sortBy= $dir;
-    				
-    				if($orderField =='category'){
-    					$expense= $expense->whereHas('category',function ($query) use ($dir){
-    						$query->where(function ($q) use ($dir){ 
-    							$q->orderBy('title',$dir);
-    						});
-    					});
-    					
-    				}else {
-    					$expense= $expense->orderBy($orderField, $sortBy);
-    				}
+    			$expense= $expense->orderBy($order, $dir);
     		}
     		$expense = $expense->offset($start)->limit($limit)->get();
     		$data = array();
@@ -72,11 +60,8 @@ class EmployeeExpenseController extends Controller
     				$expenseData[4] = $expenseDetails->pre_tax_amount;
     				$expenseData[5] = $expenseDetails->tax_amount;
     				$data[] = $expenseData;
-    				
     			}
-    			
     		}
-    		
     		$json_data = array(
     				"draw"            => intval($_GET['draw']),
     				"recordsTotal"    => intval($totalData),
@@ -197,8 +182,6 @@ class EmployeeExpenseController extends Controller
     	}
     	
     	foreach ($rowData as $key => $value) {
-    		//'employee_name'=>$value[2],
-    		//'employee_address'=>$value[3],
     		$expenseData=array(
     				'expense_date'=>$value['expense_date'],
     				'category_id'=>Category::loadCategory($value['category']),
@@ -218,24 +201,5 @@ class EmployeeExpenseController extends Controller
     		
     	}
         
-    }
-    
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validatorData(array $data)
-    {
-    	return Validator::make($data, [
-    			'expense_date' => 'required|string|max:50',
-    			'category' => 'required|string|max:50',
-    			'employee_name' => 'required|string|max:50',
-    			'employee_address' => 'required|string|max:100',
-    			'expense_description' => 'required|string|max:255',
-    			'pre_tax_amount' => 'required|regex:/^\d*(\.\d{1,2})?$/',
-    			'tax_amount' => 'required|regex:/^\d*(\.\d{1,2})?$/'
-    	]);
     }
 }

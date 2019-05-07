@@ -21,7 +21,7 @@
 			            <tr>
 			                <th>#</th>
 			                <th>Expense Date</th>
-			                <th>Category</th>
+			                <th class="no-sort">Category</th>
 			                <th class="no-sort">Expense Description</th>
 			                <th>Pre tax amount</th>
 			                <th>tax amount</th>
