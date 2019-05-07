@@ -8,7 +8,8 @@ use App\EmployeeExpense;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\EmployeeExpenseStoreRequest;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\EmployeeExpenseAddStoreRequest;
+use App\User;
 use Carbon\Carbon;
 
 class EmployeeExpenseController extends Controller
@@ -84,6 +85,17 @@ class EmployeeExpenseController extends Controller
     {
     	return view('employees_expense.import');
     }
+    
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function add()
+    {
+        $categories = Category::orderBy('title')->pluck('title','id')->prepend('-- Select Category --',0);
+        return view('employees_expense.add', compact('categories'));
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -139,6 +151,29 @@ class EmployeeExpenseController extends Controller
     		$request->session()->flash('alert-success', 'successfully expense data import');
     		return redirect()->route('employees_expense.index');
     	}
+    }
+    
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  App\Http\Requests\EmployeeExpenseAddStoreRequest $request
+     * @return \Illuminate\Http\Response
+     */
+    public function addstore(EmployeeExpenseAddStoreRequest $request)
+    {
+        $validatedData = $request->validated();
+        if(!$validatedData){
+            return redirect('employees-expense-add')->withErrors($validatedData)->withInput();
+        }
+        
+        if(isset($validatedData['expense_date']) && $validatedData['expense_date'] != ''){
+            $validatedData['expense_date'] = Carbon::parse($validatedData['expense_date'])->format('Y-m-d');
+        }
+        $validatedData['user_id'] = Auth::user()->id;
+        
+        EmployeeExpense::create($validatedData);
+        $request->session()->flash('alert-success', 'Expense has been created successfully');
+        return redirect()->route('employees_expense.index');
     }
 
     /**
