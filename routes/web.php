@@ -16,6 +16,7 @@ Auth::routes(['verify' => true]);
 Route::middleware('verified')->group(function() {
 	Route::get('/home', 'HomeController@index')->name('home');
 	Route::resource('employees-expense', 'EmployeeExpenseController')->names('employees_expense');
-	//Route::resource('employees-expense', 'EmployeeExpenseController')->only(['index', 'create','store'])->name('employees_expense');
-	//Route::resource('employees-expense', 'EmployeeExpenseController')->except(['show','edit','update', 'destroy'])->name('employees_expense');
+	
+	Route::get('/employees-expense-add', 'EmployeeExpenseController@add')->name('employees-expense-add');
+	Route::post('/employees-expense-addstore', 'EmployeeExpenseController@addstore')->name('employees-expense-addstore');
 });
