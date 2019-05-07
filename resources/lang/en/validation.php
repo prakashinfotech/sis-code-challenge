@@ -131,6 +131,9 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+    	'file'=>[
+    			'uploaded'=>'Please upload file with size lower then '.config('filesystems.max_allowed_upload_size')
+    	]
     ],
 
     /*

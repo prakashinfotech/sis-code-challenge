@@ -18,6 +18,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @stack('styles')
 </head>
 <body>
     <div id="app">
@@ -33,7 +34,12 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+							<li class="">
+				            	<a class="nav-link" href="{{ route('home') }}">Dashboard</a>
+				            </li>
+				            <li class="">
+				            	<a class="nav-link" href="{{ route('employees_expense.index') }}">Import Expense</a>
+				            </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -76,5 +82,6 @@
             @yield('content')
         </main>
     </div>
+    @stack('scripts')
 </body>
 </html>
