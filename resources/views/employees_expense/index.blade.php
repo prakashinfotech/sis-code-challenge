@@ -8,7 +8,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                	Import Expense <a class="btn btn-primary" href="{{ route('employees_expense.create') }}">Add</a>
+                	Import Expense <a class="btn btn-primary" href="{{ route('employees_expense.create') }}">Import File</a>
                 	<a class="btn btn-primary" href="{{ route('employees-expense-add') }}">Add New Record</a>
                 </div>
                 <div class="card-body">
