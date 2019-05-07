@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\EmployeeExpenseStoreRequest;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class EmployeeExpenseController extends Controller
 {
@@ -96,12 +97,48 @@ class EmployeeExpenseController extends Controller
     	if(!($validatedData)){
     		return redirect('employees-expense/create')->withErrors($validatedData)->withInput();
     	}
+    	$filename = $request->file('import_file');
+    	$header = null;
+    	$delimiter = '|';
+    	$data = array();
+    	if (($handle = fopen($filename, 'r')) !== false){
+    		while (($row = fgetcsv($handle, 1000, $delimiter)) !== false){
+    			if (!$header){
+    				$header = $row;
+    			} else{
+    				try {
+    					$data[] = array_combine($header, $row);
+    				} catch (\Exception $e) {
+    					$request->session()->flash('alert-danger', 'invalid file provided');
+    					return redirect()->route('employees_expense.create');
+    				}
+    			}
+    		}
+    		fclose($handle);
+    	}
     	
-    	$import_file= $request->file('import_file');
-    	$recode = $this->employeeExpensesImport($import_file);
-
-    	$request->session()->flash('alert-success', 'successfully expense data import');
-    	return redirect()->route('dashboard');
+    	if(count($data)>0){
+    		foreach ($data AS $value){
+    			$expenseData=array(
+    				'expense_date'=>Carbon::parse($value['date'])->format('Y-m-d'),
+    				'category_id'=>Category::loadCategory($value['category']),
+    				'user_id'=>Auth::user()->id,
+    				'expense_description'=>$value['expense_description'],
+    				'pre_tax_amount'=>$value['pre_tax_amount'],
+    				'tax_amount'=>$value['tax_amount'],
+    				'created_at'=>date('Y-m-d H:i:s'),
+    				'updated_at'=>date('Y-m-d H:i:s')    				
+    			);
+    			try {
+    				$expenseDetails= EmployeeExpense::create($expenseData);
+    			} catch (\Exception $e) {
+    				$request->session()->flash('alert-danger', 'invalid file provided');
+    				return redirect()->route('employees_expense.create');
+    			}
+    		}
+    		$request->session()->flash('alert-success', 'successfully expense data import');
+    		return redirect()->route('employees_expense.index');
+    	}
     }
 
     /**
@@ -147,59 +184,5 @@ class EmployeeExpenseController extends Controller
     public function destroy($id)
     {
         //
-    }
-    
-    static function employeeExpensesImport($filename){
-    	
-    	$userId = Auth::user()->id;
-    	ini_set('auto_detect_line_endings', true);
-    	
-    	$fileD = fopen($filename,"r");
-    	$column=fgetcsv($fileD);
-    	$i=0;
-    	while(!feof($fileD)){ $i++;
-    		$line_of_text = fgets($fileD);
-    		$parts = explode('|', $line_of_text);
-    	
-    		if(count($parts)==7){
-    			if(date('Y', strtotime($parts[0])) > date("Y")){
-    				$message = "invalid date on row no ".($i+1)." please correct it and try again";
-    				return $message;
-    			}
-    			$validatedData= array('expense_date'=>date('Y-m-d', strtotime($parts[0])),
-    					'category'=>$parts[1],
-    					'employee_name'=>$parts[2],
-    					'employee_address'=>$parts[3],
-    					'expense_description'=>$parts[4],
-    					'pre_tax_amount'=>$parts[5],
-    					'tax_amount'=>$parts[6]
-    			);
-    			$rowData[]=$validatedData;
-    		}else {
-    			$message = "invalid data format on row no ".($i+1)." please correct it and try again";
-    			return $message;
-    		}
-    	}
-    	
-    	foreach ($rowData as $key => $value) {
-    		$expenseData=array(
-    				'expense_date'=>$value['expense_date'],
-    				'category_id'=>Category::loadCategory($value['category']),
-    				'user_id'=>$userId,
-    				'expense_description'=>$value['expense_description'],
-    				'pre_tax_amount'=>$value['pre_tax_amount'],
-    				'tax_amount'=>$value['tax_amount'],
-    				'created_at'=>date('Y-m-d H:i:s'),
-    				'updated_at'=>date('Y-m-d H:i:s'),
-    			);
-    		try {
-    			$expenseDetails= EmployeeExpense::create($expenseData);
-    			
-    		} catch (\Exception $e) {
-    			return $e->getMessage();
-    		}
-    		
-    	}
-        
     }
 }
