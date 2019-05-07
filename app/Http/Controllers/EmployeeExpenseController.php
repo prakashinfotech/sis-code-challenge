@@ -101,7 +101,7 @@ class EmployeeExpenseController extends Controller
     	$recode = $this->employeeExpensesImport($import_file);
 
     	$request->session()->flash('alert-success', 'successfully expense data import');
-    	return redirect()->route('home');
+    	return redirect()->route('dashboard');
     }
 
     /**

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
 /*
@@ -13,9 +14,8 @@
 Route::get('/', 'HomeController@index')->name('home');
 Auth::routes();
 Auth::routes(['verify' => true]);
-Route::middleware('verified')->group(function () {
-	Route::get('/home', 'HomeController@index')->name('home');
+Route::middleware('verified')->group(function() {
+	Route::get('dashboard', 'HomeController@index')->name('dashboard');
 	Route::resource('employees-expense', 'EmployeeExpenseController')->names('employees_expense');
-	//Route::resource('employees-expense', 'EmployeeExpenseController')->only(['index', 'create','store'])->name('employees_expense');
-	//Route::resource('employees-expense', 'EmployeeExpenseController')->except(['show','edit','update', 'destroy'])->name('employees_expense');
 });
+
