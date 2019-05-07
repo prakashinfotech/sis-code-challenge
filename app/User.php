@@ -38,7 +38,7 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
     /**
      * Get all of the employeeExpense for the employee.
-     */	
+     */
     public function employeeExpense()
     {
     	return $this->hasMany('App\EmployeeExpense','user_id','id');
