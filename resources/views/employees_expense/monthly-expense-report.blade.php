@@ -30,22 +30,24 @@
     				</div>
 	                <div class="row">
 	                	<div class="col-md-12">
-        					<table id="monthly_expense" class="table table-striped table-bordered" style="width:100%">
-            			        <thead>
-            			            <tr>
-            			            	<th class="no-sort">Month</th>
-            			                <th class="no-sort">Pre Tax Amount</th>
-            			                <th class="no-sort">Tax Amount</th>
-            			                <th class="no-sort">Total</th>
-            			            </tr>
-            			        </thead>
-            			        <tfoot>
-                                    <tr>
-                                        <th colspan="3" style="text-align:right">Total:</th>
-                                        <th></th>
-                                    </tr>
-                                </tfoot>
-            			    </table>
+	                		<div class="table-responsive">
+	        					<table id="monthly_expense" class="table table-striped table-bordered" style="width:100%">
+	            			        <thead>
+	            			            <tr>
+	            			            	<th class="no-sort">Month</th>
+	            			                <th class="no-sort">Pre Tax Amount</th>
+	            			                <th class="no-sort">Tax Amount</th>
+	            			                <th class="no-sort">Total</th>
+	            			            </tr>
+	            			        </thead>
+	            			        <tfoot>
+	                                    <tr>
+	                                        <th colspan="3" style="text-align:right">Total:</th>
+	                                        <th></th>
+	                                    </tr>
+	                                </tfoot>
+	            			    </table>
+            			    </div>
         			    </div>
 	                </div>
                 </div>
@@ -103,8 +105,8 @@ jQuery(document).ready(function ($) {
                     return intVal(a) + intVal(b);
                 }, 0 );
  
-            // Update footer
-            $( api.column( 3 ).footer() ).html(total);
+         // Update footer
+         $( api.column( 3 ).footer() ).html(total.toFixed(2));
         }
     });
     $("#year").change(function(){
