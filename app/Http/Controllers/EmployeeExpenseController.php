@@ -134,7 +134,7 @@ class EmployeeExpenseController extends Controller
     			$expenseData=array(
     				'expense_date'=>Carbon::parse($value['date'])->format('Y-m-d'),
     				'category_id'=>Category::loadCategory($value['category']),
-    				'user_id'=>Auth::user()->id,
+    				'user_id'=>User::loadEmployee($value['employee_name'], $value['employee_address']),
     				'expense_description'=>$value['expense_description'],
     				'pre_tax_amount'=>$value['pre_tax_amount'],
     				'tax_amount'=>$value['tax_amount'],
