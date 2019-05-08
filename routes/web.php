@@ -15,7 +15,10 @@ Auth::routes();
 Auth::routes(['verify' => true]);
 Route::middleware('verified')->group(function() {
 	Route::get('dashboard', 'HomeController@index')->name('dashboard');
-	Route::resource('employees-expense', 'EmployeeExpenseController')->names('employees_expense');
-	Route::get('/employees-expense-add', 'EmployeeExpenseController@add')->name('employees-expense-add');
-	Route::post('/employees-expense-addstore', 'EmployeeExpenseController@addstore')->name('employees-expense-addstore');
+	
+	Route::group( ['middleware' => ['auth','has_permission']], function() {
+		Route::resource('employees-expense', 'EmployeeExpenseController')->names('employees_expense');
+		Route::get('employees-expense-add', 'EmployeeExpenseController@add')->name('employees-expense-add');
+		Route::post('employees-expense-addstore', 'EmployeeExpenseController@addstore')->name('employees-expense-addstore');
+	});
 });
