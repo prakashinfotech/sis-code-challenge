@@ -12,8 +12,8 @@
     <!-- Scripts -->
     <script src="{{ asset('js/jquery.js') }}"></script>    
     <script src="{{ asset('js/moment.min.js') }}"></script>
+    <script src="{{ mix('js/app.js') }}"></script>
     <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
-	<script src="{{ mix('js/app.js') }}"></script>
 
     <!-- Styles -->
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
