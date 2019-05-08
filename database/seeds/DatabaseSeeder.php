@@ -12,11 +12,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-    	User::create([
-    			'name' => 'Admin',
-    			'email' => 'admin@admin.de',
-    			'password' => Hash::make('admin123'),
-    			'email_verified_at' => Carbon\Carbon::now(),
+    	$this->call([
+    			RolesTableSeeder::class,
+    			PermissionsTableSeeder::class,
+    			UsersTableSeeder::class,
+    			EmployeesUsersTableSeeder::class
     	]);
     }
 }
