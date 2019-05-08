@@ -7,7 +7,6 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
-
 class User extends Authenticatable implements MustVerifyEmail
 {
 	use Notifiable, HasRoles;
@@ -48,7 +47,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public static function loadEmployee($name, $address)
     {
     	$user = User::where('name', $name)->where('address',$address)->first();
-    	if(!empty($user)){
+    	if (!empty($user)) {
     		return $user->id;
     	}
     	return false;
