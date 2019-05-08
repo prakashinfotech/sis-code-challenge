@@ -8,8 +8,13 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                	Import Expense <a class="btn btn-primary" href="{{ route('employees_expense.create') }}">Import File</a>
+                	@if (Auth::user ()->hasRole ('Admin')) 
+                	 Employees Expense 
+                	<a class="btn btn-primary" href="{{ route('employees_expense.create') }}">Import File</a>
+                	@elseif(Auth::user ()->hasRole ( 'Employee' ))
+                	  My Expense
                 	<a class="btn btn-primary" href="{{ route('employees-expense-add') }}">Add New Record</a>
+                	@endif
                 </div>
                 <div class="card-body">
 	                <div class="flash-message pt-10">
