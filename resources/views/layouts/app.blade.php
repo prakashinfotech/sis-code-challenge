@@ -43,7 +43,7 @@
 				            	<a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
 				            </li>
 				            <li class="">
-				            	<a class="nav-link" href="{{ route('employees_expense.index') }}">Import Expense</a>
+				            	<a class="nav-link" href="{{ route('employees_expense.index') }}">Expense</a>
 				            </li>
                     </ul>
 					@endif
