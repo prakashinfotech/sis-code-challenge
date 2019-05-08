@@ -7,7 +7,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Monthly Expense Report</div>
+                <div class="card-header">Uploaded Expense Data</div>
                 <div class="card-body">
 	                <div class="flash-message pt-10">
 						@foreach (['danger', 'warning', 'success', 'info'] as $msg)
@@ -17,37 +17,41 @@
 					    @endforeach
 	                </div>
 	                <div class="row">
-	                	<div class="col-md-4">
-    						<div class="form-group">
-    							<div class="">
-    								{!! Form::select('year', $years, $currentYear, array('id' => 'year','class'=>$errors->has('year') ? 'form-control is-invalid' :'form-control','autofocus') ) !!}
-    								@if ($errors->has('year')) 
-    									<span class="invalid-feedback"> <strong>{{ $errors->first('year') }} </strong> </span> 
-    							   	@endif
-    							</div>
-    						</div>
-    					</div>
-    				</div>
-	                <div class="row">
 	                	<div class="col-md-12">
 	                		<div class="table-responsive">
             					<table id="monthly_expense" class="table" style="width:100%">
                 			        <thead>
                 			            <tr>
+                			            	<th class="no-sort">Year</th>
                 			            	<th class="no-sort">Month</th>
                 			                <th class="no-sort">Pre Tax Amount</th>
                 			                <th class="no-sort">Tax Amount</th>
                 			                <th class="no-sort">Total</th>
                 			            </tr>
                 			        </thead>
+                			        <tbody>
+                			        	<?php 
+                			        	if(count($uploadedData) > 0){
+                			        	    foreach ($uploadedData as $valData){?>
+                			        	        <tr>
+                			        	        	<td><?php echo $valData['expense_year']; ?></td>
+                			        	        	<td><?php echo $valData['expense_month']; ?></td>
+                			        	        	<td><?php echo $valData['total_pre_tax_amount']; ?></td>
+                			        	        	<td><?php echo $valData['total_tax_amount']; ?></td>
+                			        	        	<td><?php echo $valData['total']; ?></td>
+                			        	        </tr><?php
+                			        	    }
+                			        	}
+                			        	?>            			        	
+                			        </tbody>
                 			        <tfoot>
                                         <tr>
-                                            <th colspan="3" style="text-align:right">Total:</th>
+                                            <th colspan="4" style="text-align:right">Total:</th>
                                             <th></th>
                                         </tr>
                                     </tfoot>
                 			    </table>
-							</div>
+            			    </div>
         			    </div>
 	                </div>
                 </div>
@@ -63,30 +67,11 @@
 <script>
 jQuery(document).ready(function ($) {	
     $('#monthly_expense').DataTable({
-		"ajax":{
-        	"url": "<?php echo route('monthly-expense-report'); ?>",
-        	"type": "POST",
-            "data": function(d){ 
-                d.year = $("#year").val();
-                d._token = "{{csrf_token()}}";
-			}
-       	},
-       	"columnDefs": [
-			{"targets": 'no-sort', "orderable": false}
-		],       	
-        "processing": true,
-	    "serverSide": true,
-	    "autoWidth": false,
-	    "paging": false,
+		"paging": false,
 	    "bInfo" : false,
 	    "searching": false,
 	    "ordering": false,
-	    "columns": [
-		    {"name": "expense_month"},
-		    {"name": "total_pre_tax_amount"},
-		    {"name": "total_tax_amount"},
-	        {"name": "total"}	        
-	    ],
+	    "autoWidth": false,
 	    "footerCallback": function ( row, data, start, end, display ) {
             var api = this.api(), data;
  
@@ -100,19 +85,16 @@ jQuery(document).ready(function ($) {
  
             // Total over all pages
             total = api
-                .column( 3 )
+                .column( 4 )
                 .data()
                 .reduce( function (a, b) {
                     return intVal(a) + intVal(b);
                 }, 0 );
  
             // Update footer
-            $( api.column( 3 ).footer() ).html(total.toFixed(2));
+            $( api.column( 4 ).footer() ).html(total.toFixed(2));
         }
     });
-    $("#year").change(function(){
-    	$('#monthly_expense').DataTable().ajax.reload();
-  	});
 });
 </script>
 @endpush

@@ -15,7 +15,7 @@ class PermissionMiddleware {
      */
     public function handle($request, Closure $next) {        
     	if (Auth::user ()->hasRole ('Admin')) {
-    		if ($request->is('dashboard') || $request->is('employees-expense') || $request->is('employees-expense/*'))
+    		if ($request->is('dashboard') || $request->is('employees-expense') || $request->is('employees-expense/*') || $request->is('monthly-expense-report') || $request->is('upload-version-report/*'))
     		{
     			return $next($request);
     		}else {
