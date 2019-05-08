@@ -49,26 +49,28 @@
     				</div>
     			  <div class="row">
 	               	<div class="col-md-12">
-					<table id="expense_submissions" class="table table-striped table-bordered display nowrap" style="width:100%">
-			        <thead>
-			            <tr>
-			                <th>#</th>
-			                <th class="no-sort">Employee Name</th>
-			                <th>Expense Date</th>
-			                <th class="no-sort">Category</th>
-			                <th class="no-sort">Expense Description</th>
-			                <th>Pre tax amount</th>
-			                <th>tax amount</th>
-			                <th class="no-sort">Total</th>
-			            </tr>
-			        </thead>
-			        <tfoot>
-                      <tr>
-                        <th colspan="7" style="text-align:right">Total:</th>
-                        <th></th>
-                      </tr>
-                  </tfoot>
-			    </table>
+	               		<div class="table-responsive">
+							<table id="expense_submissions" class="table table-striped table-bordered display nowrap" style="width:100%">
+					        <thead>
+					            <tr>
+					                <th>#</th>
+					                <th class="no-sort">Employee Name</th>
+					                <th>Expense Date</th>
+					                <th class="no-sort">Category</th>
+					                <th class="no-sort">Expense Description</th>
+					                <th>Pre tax amount</th>
+					                <th>tax amount</th>
+					                <th class="no-sort">Total</th>
+					            </tr>
+					        </thead>
+					        <tfoot>
+		                      <tr>
+		                        <th colspan="7" style="text-align:right">Total:</th>
+		                        <th></th>
+		                      </tr>
+		                  </tfoot>
+					    </table>
+					  </div>
 			    </div>
 			    </div>
                 </div>
@@ -82,6 +84,7 @@
 <script>
 jQuery(document).ready(function ($) {
 	   $('#expense_submissions').DataTable({
+		   "responsive":true,
 			"ajax":{
 	        	"url": "<?php echo route('employees_expense_list'); ?>",
 	        	"type": "POST",
