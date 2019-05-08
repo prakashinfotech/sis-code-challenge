@@ -53,7 +53,6 @@
 			        <thead>
 			            <tr>
 			                <th>#</th>
-			                <th class="no-sort">Employee Name</th>
 			                <th>Expense Date</th>
 			                <th class="no-sort">Category</th>
 			                <th class="no-sort">Expense Description</th>
@@ -64,7 +63,7 @@
 			        </thead>
 			        <tfoot>
                       <tr>
-                        <th colspan="7" style="text-align:right">Total:</th>
+                        <th colspan="6" style="text-align:right">Total:</th>
                         <th></th>
                       </tr>
                   </tfoot>
@@ -107,7 +106,6 @@ jQuery(document).ready(function ($) {
 		    "order": [[0, 'asc']],
 		    "columns": [
 			    {"name": "id"},
-			    {"name": "employee_name"},
 			    {"name": "expense_date"},
 			    {"name": "category"},
 		        {"name": "expense_description"},	
@@ -126,13 +124,13 @@ jQuery(document).ready(function ($) {
 	            };
 	            // Total over all pages
 	            total = api
-	                .column( 7 )
+	                .column( 6 )
 	                .data()
 	                .reduce( function (a, b) {
 	                    return intVal(a) + intVal(b);
 	                }, 0 );
 	            // Update footer
-	            $( api.column( 7 ).footer() ).html(total.toFixed(2));
+	            $( api.column( 6 ).footer() ).html(total.toFixed(2));
 	        }
 	    });
 	    

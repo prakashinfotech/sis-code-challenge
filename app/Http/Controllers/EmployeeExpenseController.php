@@ -22,58 +22,24 @@ class EmployeeExpenseController extends Controller
      */
 	public function index(Request $request)
     {
-    	$userId = Auth::user()->id;
-    	if (request()->ajax()) {
-    
-    		$expense = new EmployeeExpense();
-    		$totalData = $expense->count();
-    		$totalFiltered = $totalData;
-    		
-    		$limit = $request->length; 
-    		$start =  $request->start; 
-    		$order=	$request->columns[$request->order[0]['column']]['name'];
-    		$dir =$request->order[0]['dir'];
-    		$search =$request->search['value'];
-    		
-    		if(!empty($search))
-    		{
-    			$expense= $expense->whereHas('category',function ($query) use ($search){
-    				$query->where(function ($q) use ($search) {
-    					$q->where('title', 'LIKE', '%'.$search.'%');
-    				});
-    			})->orWhere('expense_description', 'LIKE', '%'.$search.'%')
-    			->orWhere('pre_tax_amount', 'LIKE', '%'.$search.'%')
-    			->orWhere('tax_amount', 'LIKE', '%'.$search.'%');
-    		}
-    		if(isset($order) && $order!= ''){
-    			$expense= $expense->orderBy($order, $dir);
-    		}
-    		$expense = $expense->offset($start)->limit($limit)->get();
-    		$data = array();
-    		if(!empty($expense))
-    		{
-    			foreach ($expense as $expenseDetails)
-    			{
-    				$expenseData=array();
-    				$expenseData[0] = $expenseDetails->id;
-    				$expenseData[1] = date('m/d/Y', strtotime($expenseDetails->expense_date));
-    				$expenseData[2] =  $expenseDetails->category->title;
-    				$expenseData[3] = $expenseDetails->expense_description;
-    				$expenseData[4] = $expenseDetails->pre_tax_amount;
-    				$expenseData[5] = $expenseDetails->tax_amount;
-    				$data[] = $expenseData;
-    			}
-    		}
-    		$json_data = array(
-    				"draw"            => intval($_GET['draw']),
-    				"recordsTotal"    => intval($totalData),
-    				"recordsFiltered" => intval($totalFiltered),
-    				"data"            => $data,
-    				"expense"            => $expense
-    		);
-    	  return response()->json($json_data);
+    	$currentYear = date('Y');
+    	$currentMonth = date('m');
+    	$years = array();
+    	for($i=10; $i>=0; $i--) {
+    		$years[$currentYear - $i] = $currentYear - $i;
     	}
-    	return view('employees_expense.index',compact('expense'));
+    	$months = array();
+    	for($m=1; $m<=12; ++$m){
+    		$months[date('m', mktime(0, 0, 0, $m, 1))] = date('F', mktime(0, 0, 0, $m, 1));
+    	}
+    	
+    	$categories = Category::orderBy('title')->pluck('title','id')->prepend('-- Select Category --',0);
+    	if (Auth::user ()->hasRole ('Admin')) {
+    		return view('employees_expense.index',compact('years', 'currentYear','months','currentMonth','categories'));
+    	}else {
+    		return view('employees_expense.my-expense',compact('years', 'currentYear','months','currentMonth','categories'));
+    	}
+    	
     }
 
     /**
@@ -223,6 +189,8 @@ class EmployeeExpenseController extends Controller
     
     /**
      * Report: Monthly Expense Summary for Admin
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
     public function monthlyExpenseReport(Request $request)
     {
@@ -263,5 +231,69 @@ class EmployeeExpenseController extends Controller
         }
         
         return view('employees_expense.monthly-expense-report', compact('years', 'currentYear'));
+    }
+    
+    /**
+     * get employeesExpenseList ajax.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function employeesExpenseList(Request $request){
+    	if (request()->ajax()) {
+    		$expense = EmployeeExpense::with('category','employee');
+    		
+    		if (Auth::user ()->hasRole ('Employee')) {
+    			$expense->where('user_id',Auth::user ()->id);
+    		}
+    		// SET CATEGORY FILTER
+    		if(isset($request->categoryList) && $request->categoryList!= 0){
+    			$category_id= $request->categoryList;
+    			$expense= $expense->whereHas('category',function ($q) use ($category_id){
+    				$q->where('id', $category_id);
+    				});
+    		}
+    		// SET YEAR FILTER 
+    		if(isset($request->year) && $request->year!= ''){
+    			$expense= $expense->whereYear('expense_date', $request->year);
+    		}
+    		//  SET MONTH FILTER
+    		if(isset($request->month) && $request->month!= ''){
+    			$expense= $expense->whereMonth('expense_date', $request->month);
+    		}
+    		
+    		$order=	$request->columns[$request->order[0]['column']]['name'];
+    		$dir =$request->order[0]['dir'];
+    		if(isset($order) && $order!= ''){
+    			$expense= $expense->orderBy($order, $dir);
+    		}
+    		
+    		$expenseData = $expense->groupBy('employee_expenses.id')->get();
+    		$data = array();
+    		if(!empty($expenseData)){
+    			foreach ($expenseData as $valExpense){
+    				$tempData = array();
+    				$tempData[] = $valExpense['id'];
+    				
+    				if(Auth::user ()->hasRole ('Admin')){
+    					$tempData[] = $valExpense['employee']['name'];
+    				}
+    				
+    				$tempData[] = date('m/d/Y', strtotime($valExpense['expense_date']));
+    				$tempData[] = $valExpense['category']['title'];
+    				$tempData[] = $valExpense['expense_description'];
+    				$tempData[] = $valExpense['pre_tax_amount'];
+    				$tempData[] = $valExpense['tax_amount'];
+    				$tempData[] = number_format(($valExpense['pre_tax_amount'] + $valExpense['tax_amount']),2);
+    				
+    				$data[] = $tempData;
+    			}
+    		}
+    		$json_data = array(
+    				"draw"            => intval($request['draw']),
+    				"data"            => $data
+    		);
+            return response()->json($json_data);
+    	}
     }
 }
