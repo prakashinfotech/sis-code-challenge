@@ -47,6 +47,7 @@
 <script>
 jQuery(document).ready(function ($) {
     $('#expense_submissions').DataTable( {
+        "responsive":true,
         "ajax":{
         	 "url": "<?php echo route('employees_expense.index'); ?>",
         	 "type": "GET",

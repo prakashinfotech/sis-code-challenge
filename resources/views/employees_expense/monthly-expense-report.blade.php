@@ -62,6 +62,7 @@
 <script>
 jQuery(document).ready(function ($) {	
     $('#monthly_expense').DataTable({
+        "responsive":true,
 		"ajax":{
         	"url": "<?php echo route('monthly-expense-report'); ?>",
         	"type": "POST",

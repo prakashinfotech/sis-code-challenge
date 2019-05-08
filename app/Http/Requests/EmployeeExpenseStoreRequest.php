@@ -24,7 +24,6 @@ class EmployeeExpenseStoreRequest extends FormRequest
     public function rules()
     {
         return [
-        	//'import_file' => ['required','file','mimes:psv','max:'.$this->convertFileSize(config('filesystems.max_allowed_upload_size'),'m')]
        		'import_file' => 'required|file|mimes:psv,txt|max:'.$this->convertFileSize(config('filesystems.max_allowed_upload_size'),'m')
         ];
     }
