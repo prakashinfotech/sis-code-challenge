@@ -95,6 +95,7 @@ class EmployeeExpenseController extends Controller
     	}
     	
     	if(count($data)>0){
+    		$current_timestamp = Carbon::now()->timestamp; 
     		foreach ($data AS $value){
     			$expenseData=array(
     				'expense_date'=>Carbon::parse($value['date'])->format('Y-m-d'),
@@ -103,6 +104,7 @@ class EmployeeExpenseController extends Controller
     				'expense_description'=>$value['expense_description'],
     				'pre_tax_amount'=>$value['pre_tax_amount'],
     				'tax_amount'=>$value['tax_amount'],
+    				'upload_version'=>$current_timestamp,
     				'created_at'=>date('Y-m-d H:i:s'),
     				'updated_at'=>date('Y-m-d H:i:s')    				
     			);
@@ -114,7 +116,7 @@ class EmployeeExpenseController extends Controller
     			}
     		}
     		$request->session()->flash('alert-success', 'successfully expense data import');
-    		return redirect()->route('employees_expense.index');
+    		return redirect()->route('upload-version-report', ['id' => $current_timestamp]);
     	}
     }
     
