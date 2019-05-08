@@ -220,4 +220,48 @@ class EmployeeExpenseController extends Controller
     {
         //
     }
+    
+    /**
+     * Report: Monthly Expense Summary for Admin
+     */
+    public function monthlyExpenseReport(Request $request)
+    {
+        if (request()->ajax()) {
+            $expense = new EmployeeExpense();
+            $expenseData = $expense
+            ->selectRaw("
+                MONTH(expense_date) AS expense_month,
+            	SUM(pre_tax_amount) AS total_pre_tax_amount,
+            	SUM(tax_amount) AS total_tax_amount,
+            	SUM(pre_tax_amount + tax_amount) AS total
+            ")
+            ->whereYear('expense_date', $request->year)
+            ->groupBy('expense_month')
+            ->orderBy('expense_month', 'ASC')
+            ->get();
+            
+            $data = array();
+            if(!empty($expenseData)){
+                foreach ($expenseData as $valExpense){
+                    $data[] = array(
+                        date('F', mktime(0,0,0,$valExpense['expense_month'])),
+                        $valExpense['total_pre_tax_amount'],
+                        $valExpense['total_tax_amount'],
+                        $valExpense['total']
+                    );
+                }
+            }
+            
+            $json_data = array("data" => $data);                
+            return response()->json($json_data);
+        }
+        
+        $currentYear = date('Y');        
+        $years = array();        
+        for($i=10; $i>=0; $i--) {
+            $years[$currentYear - $i] = $currentYear - $i;
+        }
+        
+        return view('employees_expense.monthly-expense-report', compact('years', 'currentYear'));
+    }
 }
