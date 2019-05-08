@@ -41,9 +41,11 @@
 				            <li class="">
 				            	<a class="nav-link" href="{{ route('employees_expense.index') }}">Expense</a>
 				            </li>
+				            @if (Auth::user ()->hasRole ('Admin'))
 				            <li class="">
 				            	<a class="nav-link" href="{{ route('monthly-expense-report') }}">Monthly Expense Report</a>
 				            </li>
+				             @endif
                     </ul>
 					@endif
                     <!-- Right Side Of Navbar -->
