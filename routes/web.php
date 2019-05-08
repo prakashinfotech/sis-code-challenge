@@ -18,4 +18,6 @@ Route::middleware('verified')->group(function() {
 	Route::resource('employees-expense', 'EmployeeExpenseController')->names('employees_expense');
 	Route::get('/employees-expense-add', 'EmployeeExpenseController@add')->name('employees-expense-add');
 	Route::post('/employees-expense-addstore', 'EmployeeExpenseController@addstore')->name('employees-expense-addstore');
+	Route::get('/monthly-expense-report', 'EmployeeExpenseController@monthlyExpenseReport')->name('monthly-expense-report');
+	Route::post('/monthly-expense-report', 'EmployeeExpenseController@monthlyExpenseReport')->name('monthly-expense-report');
 });

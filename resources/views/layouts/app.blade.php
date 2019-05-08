@@ -45,6 +45,9 @@
 				            <li class="">
 				            	<a class="nav-link" href="{{ route('employees_expense.index') }}">Import Expense</a>
 				            </li>
+				            <li class="">
+				            	<a class="nav-link" href="{{ route('monthly-expense-report') }}">Monthly Expense Report</a>
+				            </li>
                     </ul>
 					@endif
                     <!-- Right Side Of Navbar -->
