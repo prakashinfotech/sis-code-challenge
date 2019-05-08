@@ -10,17 +10,13 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/jquery.min.3.2.1.js') }}"></script>
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/jquery.js') }}"></script>    
     <script src="{{ asset('js/moment.min.js') }}"></script>
+    <script src="{{ mix('js/app.js') }}"></script>
     <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
 
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
-
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
     @stack('styles')
 </head>

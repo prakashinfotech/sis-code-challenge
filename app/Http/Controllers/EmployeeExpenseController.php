@@ -6,7 +6,6 @@ use Auth;
 use App\Category;
 use App\EmployeeExpense;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\EmployeeExpenseStoreRequest;
 use App\Http\Requests\EmployeeExpenseAddStoreRequest;
 use App\User;
@@ -295,5 +294,41 @@ class EmployeeExpenseController extends Controller
     		);
             return response()->json($json_data);
     	}
+    }
+	/**
+     * Report: Uploaded data summary for Admin
+     */
+    public function uploadVersionReport(Request $request)
+    {
+        $versionId = $request->versionId;
+        
+        $expense = new EmployeeExpense();
+        $expenseData = $expense
+        ->selectRaw("
+            YEAR(expense_date) AS expense_year, 
+        	MONTH(expense_date) AS expense_month, 
+        	SUM(pre_tax_amount) AS total_pre_tax_amount, 
+        	SUM(tax_amount) AS total_tax_amount, 
+        	SUM(pre_tax_amount + tax_amount) AS total
+        ")
+        ->where('upload_version', $versionId)
+        ->groupBy(['expense_year', 'expense_month'])
+        ->orderBy('expense_year', 'ASC')
+        ->orderBy('expense_month', 'ASC')
+        ->get();
+        
+        $uploadedData = array();
+        if(!empty($expenseData)){
+            foreach ($expenseData as $valExpense){
+                $uploadedData[] = array(
+                    'expense_year' => $valExpense['expense_year'],
+                    'expense_month' => date('F', mktime(0,0,0,$valExpense['expense_month'])),
+                    'total_pre_tax_amount' => $valExpense['total_pre_tax_amount'],
+                    'total_tax_amount' => $valExpense['total_tax_amount'],
+                    'total' => $valExpense['total']
+                );
+            }
+        }
+        return view('employees_expense.upload-version-report', compact('uploadedData'));
     }
 }

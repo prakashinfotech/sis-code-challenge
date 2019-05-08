@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @push('styles')
-<link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="{{ asset('css/datatable.css') }}" rel="stylesheet">
 @endpush
 @section('content')
 <div class="container">
@@ -30,22 +30,24 @@
     				</div>
 	                <div class="row">
 	                	<div class="col-md-12">
-        					<table id="monthly_expense" class="table" style="width:100%">
-            			        <thead>
-            			            <tr>
-            			            	<th class="no-sort">Month</th>
-            			                <th class="no-sort">Pre Tax Amount</th>
-            			                <th class="no-sort">Tax Amount</th>
-            			                <th class="no-sort">Total</th>
-            			            </tr>
-            			        </thead>
-            			        <tfoot>
-                                    <tr>
-                                        <th colspan="3" style="text-align:right">Total:</th>
-                                        <th></th>
-                                    </tr>
-                                </tfoot>
-            			    </table>
+	                		<div class="table-responsive">
+	        					<table id="monthly_expense" class="table table-striped table-bordered" style="width:100%">
+	            			        <thead>
+	            			            <tr>
+	            			            	<th class="no-sort">Month</th>
+	            			                <th class="no-sort">Pre Tax Amount</th>
+	            			                <th class="no-sort">Tax Amount</th>
+	            			                <th class="no-sort">Total</th>
+	            			            </tr>
+	            			        </thead>
+	            			        <tfoot>
+	                                    <tr>
+	                                        <th colspan="3" style="text-align:right">Total:</th>
+	                                        <th></th>
+	                                    </tr>
+	                                </tfoot>
+	            			    </table>
+            			    </div>
         			    </div>
 	                </div>
                 </div>
@@ -56,11 +58,11 @@
 @endsection
 
 @push('scripts') 
-<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('js/datatable.js') }}"></script>
 <script>
 jQuery(document).ready(function ($) {	
     $('#monthly_expense').DataTable({
+        "responsive":true,
 		"ajax":{
         	"url": "<?php echo route('monthly-expense-report'); ?>",
         	"type": "POST",
@@ -104,8 +106,8 @@ jQuery(document).ready(function ($) {
                     return intVal(a) + intVal(b);
                 }, 0 );
  
-            // Update footer
-            $( api.column( 3 ).footer() ).html(total);
+         // Update footer
+         $( api.column( 3 ).footer() ).html(total.toFixed(2));
         }
     });
     $("#year").change(function(){

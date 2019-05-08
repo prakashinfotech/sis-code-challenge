@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @push('styles')
-<link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="{{ asset('css/datatable.css') }}" rel="stylesheet">
 @endpush
 @section('content')
 <div class="container">
@@ -49,7 +49,7 @@
     				</div>
     			  <div class="row">
 	               	<div class="col-md-12">
-					<table id="expense_submissions" class="display nowrap" style="width:100%">
+					<table id="expense_submissions" class="table table-striped table-bordered display nowrap" style="width:100%">
 			        <thead>
 			            <tr>
 			                <th>#</th>
@@ -77,9 +77,8 @@
     </div>
 </div>
 @endsection
-@push('scripts') 
-<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+@push('scripts')
+<script src="{{ asset('js/datatable.js') }}"></script>
 <script>
 jQuery(document).ready(function ($) {
 	   $('#expense_submissions').DataTable({

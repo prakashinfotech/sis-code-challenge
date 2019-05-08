@@ -22,5 +22,6 @@ Route::middleware('verified')->group(function() {
 		Route::get('/monthly-expense-report', 'EmployeeExpenseController@monthlyExpenseReport')->name('monthly-expense-report');
 		Route::post('/monthly-expense-report', 'EmployeeExpenseController@monthlyExpenseReport')->name('monthly-expense-report');
 		Route::post('employees-expense-list', 'EmployeeExpenseController@employeesExpenseList')->name('employees_expense_list');
+		Route::get('/upload-version-report/{versionId}', 'EmployeeExpenseController@uploadVersionReport')->name('upload-version-report');
 	});
 });
