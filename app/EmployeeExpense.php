@@ -17,7 +17,8 @@ class EmployeeExpense extends Model
 			'user_id',
 			'expense_description',
 			'pre_tax_amount',
-			'tax_amount'
+			'tax_amount',
+			'upload_version'
 	];
 	
 	/**
