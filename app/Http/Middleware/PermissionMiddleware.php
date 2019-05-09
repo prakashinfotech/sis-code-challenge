@@ -15,6 +15,7 @@ class PermissionMiddleware {
      */
     public function handle($request, Closure $next) {        
     	if (Auth::user ()->hasRole ('Admin')) {
+    	//validate incoming requests against permissions for that role and throw 401 error if not allowed
    		if ($request->is('dashboard') || $request->is('employees-expense') || $request->is('employees-expense/*') || $request->is('monthly-expense-report') || $request->is('employees-expense-list') || $request->is('upload-version-report/*'))
  		{
     			return $next($request);

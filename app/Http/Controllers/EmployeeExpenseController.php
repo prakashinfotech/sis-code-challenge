@@ -14,8 +14,9 @@ use Carbon\Carbon;
 class EmployeeExpenseController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
+     * Display a listing of the expenses.
+     * To admin it will show all expenses
+     * To employee it will show only own expenses
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
@@ -52,7 +53,7 @@ class EmployeeExpenseController extends Controller
     }
     
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new expense.
      *
      * @return \Illuminate\Http\Response
      */
@@ -63,8 +64,8 @@ class EmployeeExpenseController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
+     * Import employee expense from file upload(pipe separated values in file).
+     * 
      * @param  App\Http\Requests\EmployeeExpenseStoreRequest  $request
      * @return \Illuminate\Http\Response
      */
@@ -74,17 +75,19 @@ class EmployeeExpenseController extends Controller
     	if(!($validatedData)){
     		return redirect('employees-expense/create')->withErrors($validatedData)->withInput();
     	}
-    	$filename = $request->file('import_file');
+    	$fileName = $request->file('import_file')->getRealPath();
     	$header = null;
     	$delimiter = '|';
-    	$data = array();
-    	if (($handle = fopen($filename, 'r')) !== false){
-    		while (($row = fgetcsv($handle, 1000, $delimiter)) !== false){
+    	$expenseRecords = array();
+    	//check if we can read file or not
+    	if (($handle = fopen($fileName, 'r')) !== false){
+    		//loop through file records line by line and make one array of all lines
+    		while (($employeeExpense = fgetcsv($handle, 1000, $delimiter)) !== false){
     			if (!$header){
-    				$header = $row;
+    				$header = $employeeExpense;
     			} else{
     				try {
-    					$data[] = array_combine($header, $row);
+    					$expenseRecords[] = array_combine($header, $employeeExpense);
     				} catch (\Exception $e) {
     					$request->session()->flash('alert-danger', 'invalid file provided');
     					return redirect()->route('employees_expense.create');
@@ -94,22 +97,23 @@ class EmployeeExpenseController extends Controller
     		fclose($handle);
     	}
     	
-    	if(count($data)>0){
-    		$current_timestamp = Carbon::now()->timestamp; 
-    		foreach ($data AS $value){
+    	if(count($expenseRecords)>0){
+    		//use current timestamp for versioning of uploads to show aggregated report after upload grouped by this timestamp
+    		$currentTimestamp = Carbon::now()->timestamp; 
+    		foreach ($expenseRecords AS $expenseRow){
     			$expenseData=array(
-    				'expense_date'=>Carbon::parse($value['date'])->format('Y-m-d'),
-    				'category_id'=>Category::loadCategory($value['category']),
-    				'user_id'=>User::loadEmployee($value['employee_name'], $value['employee_address']),
-    				'expense_description'=>$value['expense_description'],
-    				'pre_tax_amount'=>$value['pre_tax_amount'],
-    				'tax_amount'=>$value['tax_amount'],
-    				'upload_version'=>$current_timestamp,
+    				'expense_date'=>Carbon::parse($expenseRow['date'])->format('Y-m-d'),
+    				'category_id'=>Category::loadCategory($expenseRow['category']),
+    				'user_id'=>User::loadEmployee($expenseRow['employee_name'], $expenseRow['employee_address']),
+    				'expense_description'=>$expenseRow['expense_description'],
+    				'pre_tax_amount'=>$expenseRow['pre_tax_amount'],
+    				'tax_amount'=>$expenseRow['tax_amount'],
+    				'upload_version'=>$currentTimestamp,
     				'created_at'=>date('Y-m-d H:i:s'),
     				'updated_at'=>date('Y-m-d H:i:s')    				
     			);
     			try {
-    				$expenseDetails= EmployeeExpense::create($expenseData);
+    				EmployeeExpense::create($expenseData);
     			} catch (\Exception $e) {
     				$request->session()->flash('alert-danger', 'invalid file provided');
     				return redirect()->route('employees_expense.create');
@@ -121,7 +125,7 @@ class EmployeeExpenseController extends Controller
     }
     
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created expense data in storage.
      *
      * @param  App\Http\Requests\EmployeeExpenseAddStoreRequest $request
      * @return \Illuminate\Http\Response
@@ -197,6 +201,7 @@ class EmployeeExpenseController extends Controller
     {
         if (request()->ajax()) {
             $expense = new EmployeeExpense();
+            //get all expenses occured in said year grouped by month 
             $expenseData = $expense
             ->selectRaw("
                 MONTH(expense_date) AS expense_month,
@@ -209,19 +214,19 @@ class EmployeeExpenseController extends Controller
             ->orderBy('expense_month', 'ASC')
             ->get();
             
-            $data = array();
+            $monthWiseYealyExpense = array();
             if(!empty($expenseData)){
-                foreach ($expenseData as $valExpense){
-                    $data[] = array(
-                        date('F', mktime(0,0,0,$valExpense['expense_month'])),
-                        $valExpense['total_pre_tax_amount'],
-                        $valExpense['total_tax_amount'],
-                        $valExpense['total']
+                foreach ($expenseData as $monthlyExpense){
+                    $monthWiseYealyExpense[] = array(
+                        date('F', mktime(0,0,0,$monthlyExpense['expense_month'])),
+                        $monthlyExpense['total_pre_tax_amount'],
+                        $monthlyExpense['total_tax_amount'],
+                        $monthlyExpense['total']
                     );
                 }
             }
             
-            $json_data = array("data" => $data);                
+            $json_data = array("data" => $monthWiseYealyExpense);                
             return response()->json($json_data);
         }
         
@@ -235,7 +240,7 @@ class EmployeeExpenseController extends Controller
     }
     
     /**
-     * get employeesExpenseList ajax.
+     * get employees expenses
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -244,6 +249,7 @@ class EmployeeExpenseController extends Controller
     	if (request()->ajax()) {
     		$expense = EmployeeExpense::with('category','employee');
     		
+    		//show only own records in case of logged in user role is Employee
     		if (Auth::user ()->hasRole ('Employee')) {
     			$expense->where('user_id',Auth::user ()->id);
     		}
@@ -270,40 +276,42 @@ class EmployeeExpenseController extends Controller
     		}
     		
     		$expenseData = $expense->groupBy('employee_expenses.id')->get();
-    		$data = array();
+    		$employeeExpense = array();
     		if(!empty($expenseData)){
-    			foreach ($expenseData as $valExpense){
+    			foreach ($expenseData as $expenseRow){
     				$tempData = array();
-    				$tempData[] = $valExpense['id'];
+    				$tempData[] = $expenseRow['id'];
     				
     				if(Auth::user ()->hasRole ('Admin')){
-    					$tempData[] = $valExpense['employee']['name'];
+    					$tempData[] = $expenseRow['employee']['name'];
     				}
     				
-    				$tempData[] = date('m/d/Y', strtotime($valExpense['expense_date']));
-    				$tempData[] = $valExpense['category']['title'];
-    				$tempData[] = $valExpense['expense_description'];
-    				$tempData[] = $valExpense['pre_tax_amount'];
-    				$tempData[] = $valExpense['tax_amount'];
-    				$tempData[] = number_format(($valExpense['pre_tax_amount'] + $valExpense['tax_amount']),2);
+    				$tempData[] = date('m/d/Y', strtotime($expenseRow['expense_date']));
+    				$tempData[] = $expenseRow['category']['title'];
+    				$tempData[] = $expenseRow['expense_description'];
+    				$tempData[] = $expenseRow['pre_tax_amount'];
+    				$tempData[] = $expenseRow['tax_amount'];
+    				$tempData[] = number_format(($expenseRow['pre_tax_amount'] + $expenseRow['tax_amount']),2);
     				
-    				$data[] = $tempData;
+    				$employeeExpense[] = $tempData;
     			}
     		}
     		$json_data = array(
     				"draw"            => intval($request['draw']),
-    				"data"            => $data
+    				"data"            => $employeeExpense
     		);
             return response()->json($json_data);
     	}
     }
 	/**
-     * Report: Uploaded data summary for Admin
+     * Report: Uploaded data summary for Admin by uploadVersionId
+     * 
      */
     public function uploadVersionReport(Request $request)
     {
         $versionId = $request->versionId;
         
+        //get employees expense aggregated data by uploadVersion
         $expense = new EmployeeExpense();
         $expenseData = $expense
         ->selectRaw("
@@ -321,13 +329,13 @@ class EmployeeExpenseController extends Controller
         
         $uploadedData = array();
         if(!empty($expenseData)){
-            foreach ($expenseData as $valExpense){
+            foreach ($expenseData as $employeeExpense){
                 $uploadedData[] = array(
-                    'expense_year' => $valExpense['expense_year'],
-                    'expense_month' => date('F', mktime(0,0,0,$valExpense['expense_month'])),
-                    'total_pre_tax_amount' => $valExpense['total_pre_tax_amount'],
-                    'total_tax_amount' => $valExpense['total_tax_amount'],
-                    'total' => $valExpense['total']
+                    'expense_year' => $employeeExpense['expense_year'],
+                    'expense_month' => date('F', mktime(0,0,0,$employeeExpense['expense_month'])),
+                    'total_pre_tax_amount' => $employeeExpense['total_pre_tax_amount'],
+                    'total_tax_amount' => $employeeExpense['total_tax_amount'],
+                    'total' => $employeeExpense['total']
                 );
             }
         }

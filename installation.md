@@ -2,11 +2,11 @@
 
 **Note:We assume that you want to run it on development machine**
 
-- We assume that you already have PHP 7.2.x,Mysql,Apache installed on your PC.
+- We assume that you already have PHP 7.2.x(or at least 7.1.x),Mysql,Apache installed on your PC.
 
 - Create database with whatever name you want to keep, say "sis".  We need this name and password with username for updating Laravel environment file later on.
 
-- Clone repository in your local folder
+- Clone repository in your local folder from https://github.com/prakashinfotech/sis-code-challenge
 
 - You can perform any of below 2 options whichever is convenient to you
 
@@ -30,31 +30,15 @@
 
 - Run "php artisan db:seed"
 
+- Run "php artisan config:cache" to clear and reload configurations changes
+
 - Run "php artisan serve" - it will run application on http://127.0.0.1:8000
 
 - login as admin using username "admin@admin.com" and password "admin123"
 
 - you can register yourself as new employee by clciking on register button
 
-##Assumptions##
-
-- When we import sample file we assume that all employees will be present in the system and if there are any new employees in the sample file we will reject import
-
-- If you want to create new admin you can create it from database directly run below query
-
-UPDATE `sis`.`model_has_roles` SET `role_id`='1' WHERE  `role_id`=2 AND `model_id`={your_new_admin_user_id} AND `model_type`='App\\User';
-
-
-##Check Roles and Responsibilities##
-
-- As an admin you will be able to see all user's monthly expense but as an employee you would be able to access only your own expense
-
-##Missing Features/Suggestions##
-
-- No edit/delete for now for employees expenses
-- Admin User Management Screen
-
-##Salient Features of our build##
+##**Salient Features of our build**##
 
 - Used laravel-mix for css,js minification,versioning (https://laravel.com/docs/5.8/mix)
 - Used separate request objects to validate forms wherever possible,it makes changes in validation easier and separate from actual business logic
@@ -67,6 +51,24 @@ UPDATE `sis`.`model_has_roles` SET `role_id`='1' WHERE  `role_id`=2 AND `model_i
 - We have used camelCase for variable naming convention
 - When you are building application your app should use UTC/GMT time across application and database we are using it
 - We have loaded js/css files only on page where it is required(for e.g we have loaded datatable js and css only on lsiting pages)
+
+##**Assumptions**##
+
+- When we import sample file we assume that all employees will be present in the system and if there are any new employees in the sample file we will reject import
+
+- If you want to create new admin you can create it from database directly, run below query to do it
+
+UPDATE `sis`.`model_has_roles` SET `role_id`='1' WHERE  `role_id`=2 AND `model_id`={your_new_admin_user_id} AND `model_type`='App\\User';
+
+
+##Check Roles and Responsibilities##
+
+- As an admin you will be able to see all user's monthly expense but as an employee you would be able to access only your own expense
+
+##Missing Features/Suggestions##
+
+- No edit/delete for now for employees expenses
+- Admin User Management Screen
 
 Please contact maulik.shah@prakashinfotech.com if you are having any issues to run project.
 
