@@ -9,11 +9,11 @@
             <div class="card">
                 <div class="card-header">
                 	@if (Auth::user ()->hasRole ('Admin')) 
-                	 Employees Expense 
-                	<a class="btn btn-primary" href="{{ route('employees_expense.create') }}">Import File</a>
+                	 	<h5 class="float-left">Employees Expense</h5> 
+                		<a class="btn btn-primary float-right" href="{{ route('employees_expense.create') }}">Import File</a>
                 	@elseif(Auth::user ()->hasRole ( 'Employee' ))
-                	  My Expense
-                	<a class="btn btn-primary" href="{{ route('employees-expense-add') }}">Add New Record</a>
+                	  	<h5 class="float-left">My Expense</h5>
+                		<a class="btn btn-primary float-right" href="{{ route('employees-expense-add') }}">Add New Record</a>
                 	@endif
                 </div>
                 <div class="card-body">

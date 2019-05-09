@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Import Expense</div>
+                <div class="card-header"><h5>Import Expense</h5></div>
                 <div class="card-body">
 	                <div class="flash-message pt-10">
 	                    @foreach (['danger', 'warning', 'success', 'info'] as $msg)
@@ -15,6 +15,7 @@
 					    @endforeach
 	                  </div>
 					{!! Form::open(array('route' =>'employees_expense.store','enctype'=>'multipart/form-data','method'=>'POST','files'=>'true')) !!}
+					<div class="row">
 						<div class="col-md-12">
 							<div class="form-group">
 								<label for="image" class=" col-form-label text-md-left">Import File<em>*</em></label>
@@ -28,11 +29,10 @@
 								</div>
 							</div>
 						</div>
-	    			<div class="row mt-3">
-	    				<div class="col-md-12">
-	    					<button type="submit" class="btn btn-primary btn-save" autofocus="autofocus">Save</button>
-	    				</div>
-	    			</div>
+    	    			<div class="col-md-12">
+    	    				<button type="submit" class="btn btn-primary btn-save" autofocus="autofocus">Save</button>
+    	    			</div>    	    			
+    	    		</div>	
 					{!! Form::close() !!}
                 </div>
             </div>

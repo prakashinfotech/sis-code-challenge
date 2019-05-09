@@ -7,7 +7,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Monthly Expense Report</div>
+                <div class="card-header"><h5>Monthly Expense Report</h5></div>
                 <div class="card-body">
 	                <div class="flash-message pt-10">
 						@foreach (['danger', 'warning', 'success', 'info'] as $msg)
