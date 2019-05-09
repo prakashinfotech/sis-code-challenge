@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\User;
 use Illuminate\Support\Facades\Hash;
 
 class EmployeesUsersTableSeeder extends Seeder
@@ -50,15 +49,18 @@ class EmployeesUsersTableSeeder extends Seeder
     					'email' => 'StephenStrange@email.com'
     			]
     	];
-    	
     	foreach ($employees AS $employee){
-    		$user = User::create([
-    				'name' => $employee['name'],
-    				'email' => $employee['email'],
-    				'address' => $employee['address'],
-    				'password' =>Hash::make('123456')
-    				//'email_verified_at' => null,
-    			]);
+    		$id=DB::table('users')->insertGetId([
+	    				'name' => $employee['name'],
+	    				'email' => $employee['email'],
+	    				'address' => $employee['address'],
+	    				'password' => Hash::make('123456')
+	    		]);
+   			DB::table('model_has_roles')->insert([
+    				'role_id' => 2,
+   					'model_id' =>$id,
+    				'model_type' => 'App\User'
+    		]);
     	}
     	
     }
