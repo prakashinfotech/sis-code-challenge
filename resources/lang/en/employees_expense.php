@@ -35,7 +35,7 @@ return [
 	'Uploaded Expense Data'=>'Uploaded Expense Data',
 	'Year'=>'Year',
 
-	'Expense has been created successfully'=>'Expense has been created successfully',
-	'Import File data has been created successfully'=>'Import File data has been created successfully',
-	'Invalid data provided in the file'=>'Invalid data provided in the file',
+	'Expense has been created successfully'=>'Expense has been added successfully',
+	'Import File data has been created successfully'=>'File has been imported successfully',
+	'Invalid data provided in the file'=>'Invalid data provided in the file, Please check your file',
 ];
