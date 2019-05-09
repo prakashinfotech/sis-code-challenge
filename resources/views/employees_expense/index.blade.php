@@ -30,7 +30,7 @@
 	                	<div class="col-md-4">
     						<div class="form-group">
     							<div class="">
-    								{!! Form::select('months', $months, $currentMonth, array('id' => 'months','class'=>'form-control','autofocus') ) !!}
+    								{!! Form::select('months', $months, $currentMonth,array('id' => 'months','class'=>'form-control','autofocus') ) !!}
     							</div>
     						</div>
     					</div>              	

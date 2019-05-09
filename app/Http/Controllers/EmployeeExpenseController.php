@@ -23,16 +23,16 @@ class EmployeeExpenseController extends Controller
     {
     	$currentYear = date('Y');
     	$currentMonth = date('m');
-    	$years = array();
+    	$years = array(''=>__('employees_expense.Select Year'));
     	for($i=10; $i>=0; $i--) {
     		$years[$currentYear - $i] = $currentYear - $i;
     	}
-    	$months = array();
+    	$months = array(''=>__('employees_expense.Select Month'));
     	for($m=1; $m<=12; ++$m){
     		$months[date('m', mktime(0, 0, 0, $m, 1))] = date('F', mktime(0, 0, 0, $m, 1));
     	}
     	
-    	$categories = Category::orderBy('title')->pluck('title','id')->prepend('-- Select Category --',0);
+    	$categories = Category::orderBy('title')->pluck('title','id')->prepend(__('employees_expense.Select Category'),0);
     	if (Auth::user ()->hasRole ('Admin')) {
     		return view('employees_expense.index',compact('years', 'currentYear','months','currentMonth','categories'));
     	}else {
@@ -58,7 +58,7 @@ class EmployeeExpenseController extends Controller
      */
     public function add()
     {
-        $categories = Category::orderBy('title')->pluck('title','id')->prepend('-- Select Category --',0);
+    	$categories = Category::orderBy('title')->pluck('title','id')->prepend(__('employees_expense.Select Category'),0);
         return view('employees_expense.add', compact('categories'));
     }
 
@@ -86,7 +86,7 @@ class EmployeeExpenseController extends Controller
     				try {
     					$data[] = array_combine($header, $row);
     				} catch (\Exception $e) {
-    					$request->session()->flash('alert-danger', 'invalid file provided');
+    					$request->session()->flash('alert-danger', __('employees_expense.Invalid data provided in the file'));
     					return redirect()->route('employees_expense.create');
     				}
     			}
@@ -106,16 +106,16 @@ class EmployeeExpenseController extends Controller
     				'tax_amount'=>$value['tax_amount'],
     				'upload_version'=>$current_timestamp,
     				'created_at'=>date('Y-m-d H:i:s'),
-    				'updated_at'=>date('Y-m-d H:i:s')    				
+    				'updated_at'=>date('Y-m-d H:i:s')
     			);
     			try {
     				$expenseDetails= EmployeeExpense::create($expenseData);
     			} catch (\Exception $e) {
-    				$request->session()->flash('alert-danger', 'invalid file provided');
+    				$request->session()->flash('alert-danger', __('employees_expense.Invalid data provided in the file'));
     				return redirect()->route('employees_expense.create');
     			}
     		}
-    		$request->session()->flash('alert-success', 'successfully expense data import');
+    		$request->session()->flash('alert-success', __('employees_expense.Import File data has been created successfully'));
     		return redirect()->route('upload-version-report', ['id' => $current_timestamp]);
     	}
     }
@@ -139,7 +139,7 @@ class EmployeeExpenseController extends Controller
         $validatedData['user_id'] = Auth::user()->id;
         
         EmployeeExpense::create($validatedData);
-        $request->session()->flash('alert-success', 'Expense has been created successfully');
+        $request->session()->flash('alert-success', __('employees_expense.Expense has been created successfully'));
         return redirect()->route('employees_expense.index');
     }
 
@@ -221,12 +221,12 @@ class EmployeeExpenseController extends Controller
                 }
             }
             
-            $json_data = array("data" => $data);                
+            $json_data = array("data" => $data);
             return response()->json($json_data);
         }
         
-        $currentYear = date('Y');        
-        $years = array();        
+        $currentYear = date('Y');
+        $years = array();
         for($i=10; $i>=0; $i--) {
             $years[$currentYear - $i] = $currentYear - $i;
         }
