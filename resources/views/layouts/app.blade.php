@@ -10,14 +10,15 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+    <script src="{{ asset('js/jquery.js') }}"></script>    
+    <script src="{{ asset('js/moment.min.js') }}"></script>
+    <script src="{{ mix('js/app.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/bootstrap-datetimepicker.min.css') }}" rel="stylesheet">
+    @stack('styles')
 </head>
 <body>
     <div id="app">
@@ -32,20 +33,31 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
+                    @if (Auth::check())
                     <ul class="navbar-nav mr-auto">
-
+							<li class="">
+				            	<a class="nav-link" href="{{ route('dashboard') }}">{{ __('layouts.Dashboard') }}</a>
+				            </li>
+				            <li class="">
+				            	<a class="nav-link" href="{{ route('employees_expense.index') }}">{{ __('layouts.Expense') }}</a>
+				            </li>
+				            @if (Auth::user ()->hasRole ('Admin'))
+				            <li class="">
+				            	<a class="nav-link" href="{{ route('monthly-expense-report') }}">{{ __('layouts.Monthly Expense Report') }}</a>
+				            </li>
+				             @endif
                     </ul>
-
+					@endif
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="nav-link" href="{{ route('login') }}">{{ __('layouts.Login') }}</a>
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('layouts.Register') }}</a>
                                 </li>
                             @endif
                         @else
@@ -58,7 +70,7 @@
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        {{ __('layouts.Logout') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -76,5 +88,6 @@
             @yield('content')
         </main>
     </div>
+    @stack('scripts')
 </body>
 </html>
