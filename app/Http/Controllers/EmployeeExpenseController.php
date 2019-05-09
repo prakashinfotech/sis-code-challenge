@@ -120,7 +120,7 @@ class EmployeeExpenseController extends Controller
     			}
     		}
     		$request->session()->flash('alert-success', __('employees_expense.Import File data has been created successfully'));
-    		return redirect()->route('upload-version-report', ['id' => $current_timestamp]);
+    		return redirect()->route('upload-version-report', ['id' => $currentTimestamp]);
     	}
     }
     
