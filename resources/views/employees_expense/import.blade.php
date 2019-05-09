@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header"><h5>Import Expense</h5></div>
+                <div class="card-header"><h5>{{ __('employees_expense.Import Expense') }}</h5></div>
                 <div class="card-body">
 	                <div class="flash-message pt-10">
 	                    @foreach (['danger', 'warning', 'success', 'info'] as $msg)
@@ -18,7 +18,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="form-group">
-								<label for="image" class=" col-form-label text-md-left">Import File<em>*</em></label>
+								<label for="image" class=" col-form-label text-md-left">{{ __('employees_expense.Import File') }}<em>*</em></label>
 								<div class="">
 	    							{!! Form::file('import_file', array('class'=>$errors->has('import_file') ? 'form-control is-invalid' : 'form-control')) !!}
 	    							@if ($errors->has('import_file')) 
@@ -30,7 +30,7 @@
 							</div>
 						</div>
     	    			<div class="col-md-12">
-    	    				<button type="submit" class="btn btn-primary btn-save" autofocus="autofocus">Save</button>
+    	    				<button type="submit" class="btn btn-primary btn-save" autofocus="autofocus">{{ __('employees_expense.Save') }}</button>
     	    			</div>    	    			
     	    		</div>	
 					{!! Form::close() !!}

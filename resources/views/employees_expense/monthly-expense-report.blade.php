@@ -7,7 +7,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header"><h5>Monthly Expense Report</h5></div>
+                <div class="card-header"><h5>{{ __('employees_expense.Monthly Expense Report') }}</h5></div>
                 <div class="card-body">
 	                <div class="flash-message pt-10">
 						@foreach (['danger', 'warning', 'success', 'info'] as $msg)
@@ -34,15 +34,15 @@
 	        					<table id="monthly_expense" class="table table-striped table-bordered" style="width:100%">
 	            			        <thead>
 	            			            <tr>
-	            			            	<th class="no-sort">Month</th>
-	            			                <th class="no-sort">Pre Tax Amount</th>
-	            			                <th class="no-sort">Tax Amount</th>
-	            			                <th class="no-sort">Total</th>
+	            			            	<th class="no-sort">{{ __('employees_expense.Month') }}</th>
+	            			                <th class="no-sort">{{ __('employees_expense.Pre Tax Amount') }}</th>
+	            			                <th class="no-sort">{{ __('employees_expense.Tax Amount') }}</th>
+	            			                <th class="no-sort">{{ __('employees_expense.Total') }}</th>
 	            			            </tr>
 	            			        </thead>
 	            			        <tfoot>
 	                                    <tr>
-	                                        <th colspan="3" style="text-align:right">Total:</th>
+	                                        <th colspan="3" style="text-align:right">{{ __('employees_expense.Total') }}:</th>
 	                                        <th></th>
 	                                    </tr>
 	                                </tfoot>

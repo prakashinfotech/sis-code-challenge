@@ -8,13 +8,8 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                	@if (Auth::user ()->hasRole ('Admin')) 
-                	 	<h5 class="float-left">Employees Expense</h5> 
-                		<a class="btn btn-primary float-right" href="{{ route('employees_expense.create') }}">Import File</a>
-                	@elseif(Auth::user ()->hasRole ( 'Employee' ))
-                	  	<h5 class="float-left">My Expense</h5>
-                		<a class="btn btn-primary float-right" href="{{ route('employees-expense-add') }}">Add New Record</a>
-                	@endif
+                 	<h5 class="float-left">{{ __('employees_expense.Employees Expense') }}</h5> 
+                	<a class="btn btn-primary float-right" href="{{ route('employees_expense.create') }}">{{ __('employees_expense.Import File') }}</a>
                 </div>
                 <div class="card-body">
 	                <div class="flash-message pt-10">
@@ -54,18 +49,18 @@
 					        <thead>
 					            <tr>
 					                <th>#</th>
-					                <th class="no-sort">Employee Name</th>
-					                <th>Expense Date</th>
-					                <th class="no-sort">Category</th>
-					                <th class="no-sort">Expense Description</th>
-					                <th>Pre tax amount</th>
-					                <th>tax amount</th>
-					                <th class="no-sort">Total</th>
+					                <th class="no-sort">{{ __('employees_expense.Employee Name') }}</th>
+					                <th>{{ __('employees_expense.Expense Date') }}</th>
+					                <th class="no-sort">{{ __('employees_expense.Category') }}</th>
+					                <th class="no-sort">{{ __('employees_expense.Expense Description') }}</th>
+					                <th>{{ __('employees_expense.Pre Tax Amount') }}</th>
+					                <th>{{ __('employees_expense.Tax Amount') }}</th>
+					                <th class="no-sort">{{ __('employees_expense.Total') }}</th>
 					            </tr>
 					        </thead>
 					        <tfoot>
 		                      <tr>
-		                        <th colspan="7" style="text-align:right">Total:</th>
+		                        <th colspan="7" style="text-align:right">{{ __('employees_expense.Total') }}:</th>
 		                        <th></th>
 		                      </tr>
 		                  </tfoot>
