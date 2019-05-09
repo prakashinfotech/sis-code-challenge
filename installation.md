@@ -50,7 +50,7 @@
 - Verification of email after regitration is must to proceed inside
 - We have used camelCase for variable naming convention
 - When you are building application your app should use UTC/GMT time across application and database we are using it
-- We have loaded js/css files only on page where it is required(for e.g we have loaded datatable js and css only on lsiting pages)
+- We have loaded js/css files only on page where it is required(for e.g we have loaded datatable js and css only on listing pages)
 
 ##**Assumptions**##
 
