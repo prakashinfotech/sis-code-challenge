@@ -147,6 +147,18 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+    		'name'=>'Name',
+    		'email'=>'E-Mail Address',
+    		'address'=>'Address',
+    		'password'=>'Password',
+    		'password_confirmation'=>'Confirm Password',
+    		'category_id'=>'Category',
+    		'expense_date'=>'Expense Date',
+    		'pre_tax_amount'=>'Pre Tax Amount',
+    		'tax_amount'=>'Tax Amount',
+    		'expense_description'=>'Expense Description',
+    		'import_file'=>'Import File'
+    ],
 
 ];
