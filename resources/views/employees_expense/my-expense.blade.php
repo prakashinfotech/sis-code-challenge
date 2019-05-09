@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @push('styles')
-<link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="{{ asset('css/datatable.css') }}" rel="stylesheet">
 @endpush
 @section('content')
 <div class="container">
@@ -8,13 +8,8 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                	@if (Auth::user ()->hasRole ('Admin')) 
-                		<h5 class="float-left">Employees Expense</h5> 
-                		<a class="btn btn-primary float-right" href="{{ route('employees_expense.create') }}">Import File</a>
-                	@elseif(Auth::user ()->hasRole ( 'Employee' ))
-                		<h5 class="float-left">My Expense</h5>
-                		<a class="btn btn-primary float-right" href="{{ route('employees-expense-add') }}">Add New Record</a>
-                	@endif
+               		<h5 class="float-left">{{ __('employees_expense.My Expense') }}</h5>
+               		<a class="btn btn-primary float-right" href="{{ route('employees-expense-add') }}">{{ __('employees_expense.Add New Record') }}</a>
                 </div>
                 <div class="card-body">
 	                <div class="flash-message pt-10">
@@ -50,21 +45,21 @@
     			  <div class="row">
 	               	<div class="col-md-12">
 	               		<div class="table-responsive">
-							<table id="expense_submissions" class="display nowrap" style="width:100%">
+							<table id="expense_submissions" class="table table-striped table-bordered display nowrap" style="width:100%">
 					        <thead>
 					            <tr>
 					                <th>#</th>
-					                <th>Expense Date</th>
-					                <th class="no-sort">Category</th>
-					                <th class="no-sort">Expense Description</th>
-					                <th>Pre tax amount</th>
-					                <th>tax amount</th>
-					                <th class="no-sort">Total</th>
+					                <th>{{ __('employees_expense.Expense Date') }}</th>
+					                <th class="no-sort">{{ __('employees_expense.Category') }}</th>
+					                <th class="no-sort">{{ __('employees_expense.Expense Description') }}</th>
+					                <th>{{ __('employees_expense.Pre Tax Amount') }}</th>
+					                <th>{{ __('employees_expense.Tax Amount') }}</th>
+					                <th class="no-sort">{{ __('employees_expense.Total') }}</th>
 					            </tr>
 					        </thead>
 					        <tfoot>
 		                      <tr>
-		                        <th colspan="6" style="text-align:right">Total:</th>
+		                        <th colspan="6" style="text-align:right">{{ __('employees_expense.Total') }}:</th>
 		                        <th></th>
 		                      </tr>
 		                  </tfoot>
@@ -79,8 +74,7 @@
 </div>
 @endsection
 @push('scripts') 
-<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('js/datatable.js') }}"></script>
 <script>
 jQuery(document).ready(function ($) {
 	   $('#expense_submissions').DataTable({

@@ -36,14 +36,14 @@
                     @if (Auth::check())
                     <ul class="navbar-nav mr-auto">
 							<li class="">
-				            	<a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
+				            	<a class="nav-link" href="{{ route('dashboard') }}">{{ __('layouts.Dashboard') }}</a>
 				            </li>
 				            <li class="">
-				            	<a class="nav-link" href="{{ route('employees_expense.index') }}">Expense</a>
+				            	<a class="nav-link" href="{{ route('employees_expense.index') }}">{{ __('layouts.Expense') }}</a>
 				            </li>
 				            @if (Auth::user ()->hasRole ('Admin'))
 				            <li class="">
-				            	<a class="nav-link" href="{{ route('monthly-expense-report') }}">Monthly Expense Report</a>
+				            	<a class="nav-link" href="{{ route('monthly-expense-report') }}">{{ __('layouts.Monthly Expense Report') }}</a>
 				            </li>
 				             @endif
                     </ul>
@@ -53,11 +53,11 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="nav-link" href="{{ route('login') }}">{{ __('layouts.Login') }}</a>
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('layouts.Register') }}</a>
                                 </li>
                             @endif
                         @else
@@ -70,7 +70,7 @@
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        {{ __('layouts.Logout') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
