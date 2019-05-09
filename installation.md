@@ -39,7 +39,7 @@
 - you can register yourself as new employee by clciking on register button
 
 ##**Salient Features of our build**##
-
+- App is supporting localization and internalization(i18n).App is developed using ,ulti-lingual feature in mind.
 - Used laravel-mix for css,js minification,versioning (https://laravel.com/docs/5.8/mix)
 - Used separate request objects to validate forms wherever possible,it makes changes in validation easier and separate from actual business logic
 - Used laravel eloquent ORM model throughout the application (https://laravel.com/docs/5.8/eloquent)
