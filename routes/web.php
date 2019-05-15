@@ -12,8 +12,8 @@
 */
 Route::get('/', 'HomeController@index')->name('home');
 Auth::routes();
-Auth::routes(['verify' => true]);
-Route::middleware('verified')->group(function () {
+//Auth::routes(['verify' => true]);
+//Route::middleware('verified')->group(function () {
 	Route::get('dashboard', 'HomeController@index')->name('dashboard');
 	Route::group(['middleware' => ['auth','has_permission']], function () {
 		Route::resource('employees-expense', 'EmployeeExpenseController')->names('employees_expense');
@@ -24,4 +24,4 @@ Route::middleware('verified')->group(function () {
 		Route::post('employees-expense-list', 'EmployeeExpenseController@employeesExpenseList')->name('employees_expense_list');
 		Route::get('/upload-version-report/{versionId}', 'EmployeeExpenseController@uploadVersionReport')->name('upload-version-report');
 	});
-});
+//});
